@@ -649,16 +649,30 @@ function renderSongs() {
   $("#next").onclick = () => { S.screen = "photos"; render(); };
 }
 // ---------- Song previews: official 30-second clips from the Apple iTunes Search API (no key needed) ----------
+const SILENT = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAABErAAABAAgAZGF0YQAAAAA=";
 const PV = { audio: new Audio(), cache: {}, i: -1, btn: null };
 PV.audio.preload = "none";
 PV.audio.onended = () => { setBtn(PV.btn, false); PV.i = -1; };
 function setBtn(b, on) { if (b && document.contains(b)) b.textContent = on ? "❚❚ Pause" : "▶ Reinhören"; }
+// JSONP works even where the API sends no CORS headers; fetch is only the first try.
+function jsonp(url) {
+  return new Promise((res, rej) => {
+    const cb = "pv" + Math.random().toString(36).slice(2), el = document.createElement("script");
+    const done = () => { delete window[cb]; el.remove(); clearTimeout(t); };
+    const t = setTimeout(() => { done(); rej(new Error("timeout")); }, 8000);
+    window[cb] = d => { done(); res(d); };
+    el.onerror = () => { done(); rej(new Error("script")); };
+    el.src = url + "&callback=" + cb; document.head.appendChild(el);
+  });
+}
 async function findPreview(s) {
   const key = s.id; if (key in PV.cache) return PV.cache[key];
   const q = encodeURIComponent(`${s.t} ${s.a || ""}`.replace(/\s*&\s*|\s+ft\.\s+/gi, " "));
-  const r = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=5&country=de`);
-  if (!r.ok) throw new Error("http " + r.status);
-  const list = (await r.json()).results || [];
+  const url = `https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=5&country=de`;
+  let data;
+  try { const r = await fetch(url); if (!r.ok) throw new Error("http " + r.status); data = await r.json(); }
+  catch (e) { data = await jsonp(url); }
+  const list = data.results || [];
   const norm = x => String(x).toLowerCase().replace(/[^a-z0-9äöüß]+/g, " ").trim();
   const hit = list.find(x => x.previewUrl && norm(x.trackName).startsWith(norm(s.t).slice(0, 12))) || null;
   return (PV.cache[key] = hit && { url: hit.previewUrl, cover: hit.artworkUrl100 });
@@ -667,6 +681,7 @@ async function preview(i, btn) {
   if (PV.i === i && !PV.audio.paused) { PV.audio.pause(); setBtn(btn, false); return; }
   PV.audio.pause(); setBtn(PV.btn, false);
   PV.i = i; PV.btn = btn; btn.disabled = true; btn.textContent = "Lädt …";
+  if (!PV.unlocked) { PV.audio.src = SILENT; PV.audio.play().then(() => { PV.unlocked = true; }).catch(() => {}); }
   try {
     const p = await findPreview(S.songs[i]);
     if (!p) { toast("Für diesen Song gibt es keine Vorschau."); btn.textContent = "▶ Reinhören"; PV.i = -1; return; }
@@ -674,7 +689,8 @@ async function preview(i, btn) {
     PV.audio.src = p.url; await PV.audio.play(); setBtn(btn, true);
   } catch (e) {
     btn.textContent = "▶ Reinhören"; PV.i = -1;
-    toast("Die Vorschau lässt sich hier nicht laden. Probier die App-Version im normalen Browser.");
+    console.warn("Vorschau-Fehler", e);
+    toast(`Die Vorschau lässt sich nicht laden (${e.name || "Fehler"}: ${String(e.message || "").slice(0, 40)}).`);
   } finally { btn.disabled = false; }
 }
 
