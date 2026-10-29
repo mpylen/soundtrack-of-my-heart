@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a1430">
+<meta name="description" content="Beantworte 7 lustige Fragen und bekomm die 6 Songs, die zu dir passen, als Reel zum Teilen.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+<title>Soundtrack of My Heart</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Caveat:wght@600&family=Figtree:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one phone-width column, like a mixtape case; one screen per step, the cassette side labels A/B carry through to the reel. Single dark theme by choice (night drive). */
+:root {
+  --ink: #1a1430;
+  --surface: #261e42;
+  --surface-2: #322858;
+  --line: #43386d;
+  --text: #f7f2ff;
+  --muted: #b9afd6;
+  --heart: #ff4d6d;
+  --butter: #ffd166;
+  --lilac: #b9a7ff;
+  --label: #fbf3e4;
+  --label-ink: #2a2140;
+  --f-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --f-hand: "Caveat", "Bradley Hand", cursive;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--butter); outline-offset: 2px; }
+
+.app {
+  max-width: 460px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.brand { font-family: var(--f-display); font-weight: 800; font-size: 15px; letter-spacing: .01em; display: flex; align-items: center; gap: 8px; }
+.brand i { width: 14px; height: 14px; background: var(--heart); border-radius: 3px 50% 50% 50%; transform: rotate(45deg); display: inline-block; }
+.back { background: none; border: 0; color: var(--muted); padding: 8px 4px; font-size: 15px; }
+.progress { height: 6px; background: var(--surface); border-radius: 99px; overflow: hidden; }
+.progress span { display: block; height: 100%; background: var(--heart); border-radius: 99px; transition: width .35s ease; }
+
+main { flex: 1; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+h1, h2 { font-family: var(--f-display); font-weight: 800; line-height: 1.05; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(38px, 11vw, 52px); letter-spacing: -.02em; }
+h2 { font-size: clamp(27px, 7.4vw, 34px); letter-spacing: -.01em; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.eyebrow { font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--butter); }
+
+.btn {
+  min-height: 56px; border-radius: 16px; border: 0; padding: 14px 20px;
+  background: var(--heart); color: #fff; font-weight: 700; font-size: 18px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+  transition: transform .12s ease, filter .12s;
+}
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.ghost { background: var(--surface); color: var(--text); border: 1px solid var(--line); }
+.btn.small { min-height: 44px; font-size: 15px; padding: 8px 14px; width: auto; border-radius: 12px; }
+.stack { display: flex; flex-direction: column; gap: 10px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* Start: CSS cassette */
+.tape {
+  background: var(--surface-2); border-radius: 18px; padding: 16px; position: relative;
+  box-shadow: inset 0 0 0 2px var(--line);
+}
+.tape-label { background: var(--label); color: var(--label-ink); border-radius: 10px; padding: 12px 14px 14px; }
+.tape-label .hand { font-family: var(--f-hand); font-size: 30px; line-height: 1; }
+.tape-label .sub { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; opacity: .7; margin-top: 4px; display: flex; justify-content: space-between; }
+.reels { display: flex; justify-content: center; gap: 70px; margin: 14px 0 2px; }
+.reel { width: 54px; height: 54px; border-radius: 50%; background: var(--ink); border: 6px solid var(--label); position: relative; animation: spin 4s linear infinite; }
+.reel::before, .reel::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: 30px; height: 4px; margin: -2px 0 0 -15px; background: var(--label); border-radius: 2px; }
+.reel::after { transform: rotate(60deg); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.sample { font-size: 14px; color: var(--muted); display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin-top: 12px; }
+.sample b { font-family: var(--f-mono); font-weight: 500; color: var(--butter); font-size: 12.5px; padding-top: 2px; }
+.facts { display: flex; gap: 8px; flex-wrap: wrap; }
+.facts span { font-size: 14px; padding: 6px 10px; border-radius: 99px; background: var(--surface); color: var(--muted); }
+
+/* Quiz */
+.qnum { font-family: var(--f-mono); font-size: 13px; color: var(--muted); }
+.options { display: grid; gap: 10px; }
+.opt {
+  display: flex; align-items: center; gap: 14px; text-align: left; width: 100%;
+  min-height: 64px; padding: 12px 16px; border-radius: 16px;
+  background: var(--surface); border: 2px solid transparent; transition: border-color .15s, background .15s, transform .12s;
+}
+.opt:active { transform: scale(.985); }
+.opt .key { font-family: var(--f-mono); font-size: 13px; width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-2); color: var(--butter); flex: none; }
+.opt .t { font-weight: 700; font-size: 18px; display: block; }
+.opt .s { color: var(--muted); font-size: 14.5px; display: block; }
+.opt[aria-pressed="true"] { border-color: var(--heart); background: var(--surface-2); }
+.opt[aria-pressed="true"] .key { background: var(--heart); color: #fff; }
+
+.yearbox { background: var(--surface); border-radius: 20px; padding: 22px 18px; display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
+.yearline { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.bigyear { font-family: var(--f-display); font-weight: 800; font-size: 76px; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.round { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); font-size: 26px; display: grid; place-items: center; flex: none; }
+input[type=range] { width: 100%; accent-color: var(--heart); height: 32px; }
+.window { font-size: 15.5px; color: var(--muted); text-align: center; }
+.window b { color: var(--butter); font-weight: 700; }
+
+.textin { width: 100%; min-height: 56px; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); font-size: 18px; }
+.textin:focus { border-color: var(--heart); outline: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 14px; font-size: 15px; min-height: 40px; }
+.chip:hover { border-color: var(--lilac); }
+
+/* Songs */
+.songs { display: flex; flex-direction: column; gap: 10px; }
+.side { font-family: var(--f-mono); font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+.song { background: var(--surface); border-radius: 16px; padding: 12px 12px 12px 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: start; }
+.song .no { font-family: var(--f-mono); font-size: 13px; color: var(--butter); padding-top: 3px; }
+.song .info { min-width: 0; }
+.song .title { font-weight: 700; font-size: 17.5px; line-height: 1.25; overflow-wrap: anywhere; }
+.song .meta { font-size: 14.5px; color: var(--muted); }
+.song .why { font-size: 14.5px; color: var(--lilac); margin-top: 2px; }
+.song .moves { display: flex; flex-direction: column; gap: 4px; }
+.icon { width: 36px; height: 32px; border-radius: 9px; background: var(--surface-2); border: 0; color: var(--muted); display: grid; place-items: center; font-size: 15px; }
+.icon:disabled { opacity: .3; cursor: default; }
+.song .acts { grid-column: 2 / 4; display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.pill { border: 1px solid var(--line); background: transparent; border-radius: 99px; padding: 6px 12px; font-size: 14px; min-height: 36px; color: var(--text); }
+.pill.on { background: var(--surface-2); border-color: var(--lilac); }
+.swap { grid-column: 1 / 4; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.alt { text-align: left; background: var(--surface-2); border: 0; border-radius: 12px; padding: 10px 12px; min-height: 48px; }
+.alt small { color: var(--muted); display: block; font-size: 13.5px; }
+.own { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; }
+.own input { min-width: 0; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--ink); font-size: 15px; }
+@media (max-width: 380px) { .own { grid-template-columns: 1fr; } }
+
+/* Photos */
+.drop { border: 2px dashed var(--line); border-radius: 18px; padding: 22px 16px; display: flex; flex-direction: column; gap: 12px; align-items: stretch; background: var(--surface); }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.thumb { position: relative; aspect-ratio: 1; max-width: 100%; border-radius: 12px; overflow: hidden; background: var(--surface-2); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb button { position: absolute; top: 6px; right: 6px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(26,20,48,.8); color: #fff; font-size: 15px; }
+.note { font-size: 14px; color: var(--muted); display: flex; gap: 8px; align-items: flex-start; }
+.note::before { content: ""; flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: var(--lilac); }
+
+/* Reel */
+.stage { position: relative; align-self: center; width: 100%; max-width: min(100%, calc(62vh * 9 / 16)); aspect-ratio: 9 / 16; border-radius: 20px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px var(--line); }
+.stage canvas { width: 100%; height: 100%; display: block; }
+.playbtn { position: absolute; inset: 0; margin: auto; width: 84px; height: 84px; border-radius: 50%; border: 0; background: rgba(255,77,109,.92); color: #fff; font-size: 30px; display: grid; place-items: center; padding-left: 6px; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: var(--surface); padding: 5px; border-radius: 14px; }
+.seg button { border: 0; background: transparent; border-radius: 10px; min-height: 42px; font-size: 15px; color: var(--muted); font-weight: 500; }
+.seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); font-weight: 700; box-shadow: inset 0 0 0 1px var(--lilac); }
+.ctrl { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.toggle { display: flex; align-items: center; gap: 8px; font-size: 14.5px; color: var(--muted); }
+.toggle input { width: 20px; height: 20px; accent-color: var(--heart); }
+
+/* Sheet + toast */
+.sheet-bg { position: fixed; inset: 0; background: rgba(10,7,22,.66); display: flex; align-items: flex-end; justify-content: center; z-index: 20; }
+.sheet { background: var(--surface); width: 100%; max-width: 460px; max-height: 88vh; overflow-y: auto; border-radius: 22px 22px 0 0; padding: 22px max(18px, env(safe-area-inset-left, 0px)) calc(22px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.sheet ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; }
+.sheet pre { margin: 0; background: var(--ink); border-radius: 12px; padding: 12px; font-family: var(--f-mono); font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--label); }
+.why-box { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; font-size: 14.5px; color: var(--muted); }
+.why-box b { color: var(--text); }
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--label); color: var(--label-ink); padding: 12px 16px; border-radius: 14px; font-size: 15px; width: max-content; max-width: calc(100% - 32px); z-index: 30; box-shadow: 0 8px 30px rgba(0,0,0,.35); }
+
+.fade { animation: in .28s ease both; }
+@keyframes in { from { opacity: .001; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .fade, .reel { animation: none; } .progress span { transition: none; } }
+[hidden] { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+
+<div class="app">
+  <div class="top">
+    <button class="back" id="back" hidden>‹ Zurück</button>
+    <div class="brand"><i></i>Soundtrack of My Heart</div>
+    <span id="stepinfo" class="qnum"></span>
+  </div>
+  <div class="progress" id="progress" hidden><span id="bar" style="width:0"></span></div>
+  <main id="view"></main>
+</div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+// ---------- Song catalogue (prototype sample; the MVP uses a curated DB with ~30 hits per year) ----------
+// [title, artist, year, genres, energy 0..1, mood]
+const RAW = [
+  ["Take On Me","a-ha",1985,"pop",.9,"love"],
+  ["99 Luftballons","Nena",1983,"deutsch pop",.7,"drama"],
+  ["Major Tom (völlig losgelöst)","Peter Schilling",1983,"deutsch electro",.8,"drama"],
+  ["Walk This Way","Run-DMC & Aerosmith",1986,"hiphop rock",.8,"empower"],
+  ["Livin' on a Prayer","Bon Jovi",1986,"rock",.9,"empower"],
+  ["Never Gonna Give You Up","Rick Astley",1987,"pop",.8,"love"],
+  ["Sweet Child o' Mine","Guns N' Roses",1987,"rock",.8,"love"],
+  ["Like a Prayer","Madonna",1989,"pop",.7,"drama"],
+  ["Ice Ice Baby","Vanilla Ice",1990,"hiphop",.8,"empower"],
+  ["Vogue","Madonna",1990,"pop electro",.8,"empower"],
+  ["Nothing Compares 2 U","Sinéad O'Connor",1990,"pop",.2,"sad"],
+  ["Smells Like Teen Spirit","Nirvana",1991,"rock",.9,"drama"],
+  ["Losing My Religion","R.E.M.",1991,"rock",.5,"drama"],
+  ["Rhythm Is a Dancer","Snap!",1992,"electro",.9,"empower"],
+  ["Die da!?!","Die Fantastischen Vier",1992,"deutsch hiphop",.8,"love"],
+  ["I Will Always Love You","Whitney Houston",1992,"pop",.3,"sad"],
+  ["What Is Love","Haddaway",1993,"electro",.9,"drama"],
+  ["Mr. Vain","Culture Beat",1993,"electro",.9,"drama"],
+  ["Zombie","The Cranberries",1994,"rock",.6,"drama"],
+  ["Mädchen","Lucilectric",1994,"deutsch pop",.8,"empower"],
+  ["Gangsta's Paradise","Coolio",1995,"hiphop",.5,"drama"],
+  ["Wonderwall","Oasis",1995,"rock",.5,"love"],
+  ["Children","Robert Miles",1995,"electro",.7,"sad"],
+  ["Wannabe","Spice Girls",1996,"pop",.9,"empower"],
+  ["Barbie Girl","Aqua",1997,"pop electro",.9,"empower"],
+  ["Bitter Sweet Symphony","The Verve",1997,"rock",.6,"drama"],
+  ["My Heart Will Go On","Céline Dion",1997,"pop",.2,"love"],
+  ["Du hast","Rammstein",1997,"deutsch rock",.9,"drama"],
+  ["…Baby One More Time","Britney Spears",1998,"pop",.8,"drama"],
+  ["Blue (Da Ba Dee)","Eiffel 65",1999,"electro",.9,"empower"],
+  ["Sandstorm","Darude",1999,"electro",1,"empower"],
+  ["No Scrubs","TLC",1999,"hiphop pop",.6,"empower"],
+  ["Mambo No. 5","Lou Bega",1999,"pop",.9,"love"],
+  ["Mit dir","Freundeskreis",1999,"deutsch hiphop",.5,"love"],
+  ["Oops!… I Did It Again","Britney Spears",2000,"pop",.8,"drama"],
+  ["The Real Slim Shady","Eminem",2000,"hiphop",.8,"empower"],
+  ["Bye Bye Bye","*NSYNC",2000,"pop",.9,"empower"],
+  ["Can't Get You Out of My Head","Kylie Minogue",2001,"pop electro",.8,"love"],
+  ["Lady Marmalade","Christina Aguilera, Lil' Kim, Mýa & P!nk",2001,"pop",.8,"empower"],
+  ["Lose Yourself","Eminem",2002,"hiphop",.9,"empower"],
+  ["Complicated","Avril Lavigne",2002,"rock pop",.6,"drama"],
+  ["Ein Kompliment","Sportfreunde Stiller",2002,"deutsch rock",.6,"love"],
+  ["Mensch","Herbert Grönemeyer",2002,"deutsch pop",.4,"sad"],
+  ["Crazy in Love","Beyoncé",2003,"pop",.9,"love"],
+  ["In da Club","50 Cent",2003,"hiphop",.8,"empower"],
+  ["Hey Ya!","OutKast",2003,"hiphop pop",.95,"love"],
+  ["Mr. Brightside","The Killers",2004,"rock",.9,"drama"],
+  ["Yeah!","Usher",2004,"hiphop",.9,"love"],
+  ["Dragostea din tei","O-Zone",2004,"pop electro",.9,"love"],
+  ["Geile Zeit","Juli",2004,"deutsch rock",.5,"sad"],
+  ["Hollaback Girl","Gwen Stefani",2005,"pop",.8,"empower"],
+  ["Feel Good Inc.","Gorillaz",2005,"hiphop rock",.7,"drama"],
+  ["Durch den Monsun","Tokio Hotel",2005,"deutsch rock",.6,"sad"],
+  ["Crazy","Gnarls Barkley",2006,"pop",.7,"drama"],
+  ["SexyBack","Justin Timberlake",2006,"pop electro",.8,"love"],
+  ["Hips Don't Lie","Shakira",2006,"pop",.9,"love"],
+  ["Rehab","Amy Winehouse",2006,"pop",.6,"empower"],
+  ["Umbrella","Rihanna",2007,"pop",.7,"love"],
+  ["I Kissed a Girl","Katy Perry",2008,"pop",.8,"love"],
+  ["Viva la Vida","Coldplay",2008,"rock pop",.6,"drama"],
+  ["Poker Face","Lady Gaga",2008,"electro pop",.9,"drama"],
+  ["I Gotta Feeling","Black Eyed Peas",2009,"electro pop",.9,"empower"],
+  ["Empire State of Mind","Jay-Z & Alicia Keys",2009,"hiphop",.6,"empower"],
+  ["Bad Romance","Lady Gaga",2009,"electro pop",.9,"drama"],
+  ["Stadt","Cassandra Steen & Adel Tawil",2009,"deutsch pop",.4,"sad"],
+  ["Tik Tok","Kesha",2010,"pop electro",.9,"empower"],
+  ["Waka Waka","Shakira",2010,"pop",.9,"empower"],
+  ["Satellite","Lena",2010,"pop deutsch",.7,"love"],
+  ["Rolling in the Deep","Adele",2011,"pop",.6,"drama"],
+  ["Someone Like You","Adele",2011,"pop",.2,"sad"],
+  ["Party Rock Anthem","LMFAO",2011,"electro",1,"empower"],
+  ["Somebody That I Used to Know","Gotye",2011,"pop",.4,"sad"],
+  ["Call Me Maybe","Carly Rae Jepsen",2012,"pop",.8,"love"],
+  ["Gangnam Style","PSY",2012,"electro pop",1,"empower"],
+  ["Get Lucky","Daft Punk",2013,"electro",.8,"love"],
+  ["Wake Me Up","Avicii",2013,"electro",.8,"empower"],
+  ["Royals","Lorde",2013,"pop",.4,"drama"],
+  ["Lieder","Adel Tawil",2013,"deutsch pop",.7,"love"],
+  ["Atemlos durch die Nacht","Helene Fischer",2013,"deutsch pop",.9,"love"],
+  ["Happy","Pharrell Williams",2014,"pop",.9,"empower"],
+  ["Shake It Off","Taylor Swift",2014,"pop",.9,"empower"],
+  ["Auf uns","Andreas Bourani",2014,"deutsch pop",.7,"empower"],
+  ["Uptown Funk","Mark Ronson ft. Bruno Mars",2015,"pop",.95,"empower"],
+  ["Hello","Adele",2015,"pop",.3,"sad"],
+  ["Hotline Bling","Drake",2015,"hiphop",.5,"drama"],
+  ["Lieblingsmensch","Namika",2015,"deutsch pop",.6,"love"],
+  ["Cheap Thrills","Sia",2016,"pop electro",.8,"empower"],
+  ["Work","Rihanna ft. Drake",2016,"hiphop",.6,"love"],
+  ["Chöre","Mark Forster",2016,"deutsch pop",.7,"empower"],
+  ["Shape of You","Ed Sheeran",2017,"pop",.7,"love"],
+  ["Despacito","Luis Fonsi & Daddy Yankee",2017,"pop",.8,"love"],
+  ["HUMBLE.","Kendrick Lamar",2017,"hiphop",.7,"empower"],
+  ["God's Plan","Drake",2018,"hiphop",.5,"empower"],
+  ["Shallow","Lady Gaga & Bradley Cooper",2018,"rock pop",.4,"love"],
+  ["Roller","Apache 207",2019,"deutsch hiphop",.7,"empower"],
+  ["bad guy","Billie Eilish",2019,"pop",.6,"drama"],
+  ["Old Town Road","Lil Nas X",2019,"hiphop",.6,"empower"],
+  ["Dance Monkey","Tones and I",2019,"pop",.7,"drama"],
+  ["Blinding Lights","The Weeknd",2020,"electro pop",.9,"drama"],
+  ["Dynamite","BTS",2020,"pop",.9,"empower"],
+  ["Levitating","Dua Lipa",2020,"pop electro",.9,"love"],
+  ["drivers license","Olivia Rodrigo",2021,"pop",.3,"sad"],
+  ["STAY","The Kid LAROI & Justin Bieber",2021,"pop",.8,"drama"],
+  ["Industry Baby","Lil Nas X & Jack Harlow",2021,"hiphop",.9,"empower"],
+  ["As It Was","Harry Styles",2022,"pop",.7,"sad"],
+  ["Anti-Hero","Taylor Swift",2022,"pop",.6,"drama"],
+  ["About Damn Time","Lizzo",2022,"pop",.9,"empower"],
+  ["I'm Good (Blue)","David Guetta & Bebe Rexha",2022,"electro",.9,"empower"],
+  ["Layla","DJ Robin & Schürze",2022,"deutsch pop",.9,"love"],
+  ["Flowers","Miley Cyrus",2023,"pop",.7,"empower"],
+  ["Tattoo","Loreen",2023,"electro pop",.6,"love"],
+  ["vampire","Olivia Rodrigo",2023,"rock pop",.6,"drama"],
+  ["Paint The Town Red","Doja Cat",2023,"hiphop",.6,"empower"],
+  ["Houdini","Dua Lipa",2023,"electro pop",.8,"love"],
+  ["Komet","Udo Lindenberg & Apache 207",2023,"deutsch pop",.5,"sad"],
+  ["Espresso","Sabrina Carpenter",2024,"pop",.8,"love"],
+  ["Not Like Us","Kendrick Lamar",2024,"hiphop",.8,"empower"],
+  ["Birds of a Feather","Billie Eilish",2024,"pop",.5,"love"],
+  ["APT.","ROSÉ & Bruno Mars",2024,"pop",.9,"love"],
+  ["Beautiful Things","Benson Boone",2024,"rock pop",.6,"love"],
+  ["Too Sweet","Hozier",2024,"rock",.5,"love"],
+  ["Lose Control","Teddy Swims",2024,"pop",.5,"drama"],
+  ["Die With A Smile","Lady Gaga & Bruno Mars",2024,"pop",.4,"love"],
+  ["Abracadabra","Lady Gaga",2025,"electro pop",.8,"drama"],
+  ["Ordinary","Alex Warren",2025,"pop",.4,"love"],
+  ["Manchild","Sabrina Carpenter",2025,"pop",.7,"empower"],
+  ["Golden","HUNTR/X",2025,"pop",.8,"empower"],
+  ["Wackelkontakt","Oimara",2025,"deutsch pop",.9,"love"],
+  ["Faith","George Michael",1987,"pop",.7,"love"],
+  ["With or Without You","U2",1987,"rock",.4,"sad"],
+  ["Don't Worry, Be Happy","Bobby McFerrin",1988,"pop",.6,"empower"],
+  ["Pump Up the Jam","Technotronic",1989,"electro",.95,"empower"],
+  ["Don't Stop Believin'","Journey",1988,"rock",.7,"empower"],
+  ["Girl You Know It's True","Milli Vanilli",1989,"pop",.8,"love"],
+  ["Wind of Change","Scorpions",1990,"rock",.4,"drama"],
+  ["Ice Ice Baby","Vanilla Ice",1990,"hiphop",.8,"empower"],
+  ["Pump It Up","Danzel",2004,"electro",.9,"empower"],
+  ["Everybody (Backstreet's Back)","Backstreet Boys",1997,"pop",.9,"love"],
+  ["Wannabe","Spice Girls",1996,"pop",.9,"empower"],
+  ["Killing Me Softly","Fugees",1996,"hiphop",.4,"love"],
+  ["Macarena","Los del Río",1996,"pop",.9,"love"],
+  ["Rock DJ","Robbie Williams",2000,"pop",.9,"empower"],
+  ["Angels","Robbie Williams",1997,"pop",.3,"love"],
+  ["Genie in a Bottle","Christina Aguilera",1999,"pop",.7,"love"],
+  ["Toxic","Britney Spears",2003,"pop electro",.9,"drama"],
+  ["Clocks","Coldplay",2002,"rock",.6,"drama"],
+  ["Seven Nation Army","The White Stripes",2003,"rock",.8,"empower"],
+  ["Sunday Bloody Sunday","U2",1983,"rock",.8,"drama"],
+  ["Since U Been Gone","Kelly Clarkson",2004,"pop rock",.9,"drama"],
+  ["Hung Up","Madonna",2005,"electro pop",.9,"empower"],
+  ["Valerie","Mark Ronson & Amy Winehouse",2007,"pop",.8,"love"],
+  ["Mr. Saxobeat","Alexandra Stan",2010,"electro pop",.9,"love"],
+  ["Love the Way You Lie","Eminem & Rihanna",2010,"hiphop",.6,"drama"],
+  ["Firework","Katy Perry",2010,"pop",.8,"empower"],
+  ["Titanium","David Guetta & Sia",2011,"electro",.8,"empower"],
+  ["We Found Love","Rihanna & Calvin Harris",2011,"electro pop",.9,"love"],
+  ["Skyfall","Adele",2012,"pop",.3,"drama"],
+  ["Somebody Else","The 1975",2016,"rock pop",.6,"sad"],
+  ["Thinking Out Loud","Ed Sheeran",2014,"pop",.3,"love"],
+  ["All of Me","John Legend",2013,"pop",.2,"love"],
+  ["Counting Stars","OneRepublic",2013,"pop rock",.7,"drama"],
+  ["Blank Space","Taylor Swift",2014,"pop",.7,"drama"],
+  ["Can't Stop the Feeling!","Justin Timberlake",2016,"pop",.9,"empower"],
+  ["Closer","The Chainsmokers & Halsey",2016,"electro pop",.7,"love"],
+  ["Sorry","Justin Bieber",2015,"pop electro",.8,"sad"],
+  ["Someone You Loved","Lewis Capaldi",2019,"pop",.2,"sad"],
+  ["Senorita","Shawn Mendes & Camila Cabello",2019,"pop",.7,"love"],
+  ["Watermelon Sugar","Harry Styles",2020,"pop",.8,"love"],
+  ["Don't Start Now","Dua Lipa",2020,"pop electro",.9,"empower"],
+  ["good 4 u","Olivia Rodrigo",2021,"rock pop",.9,"empower"],
+  ["Bad Habits","Ed Sheeran",2021,"pop",.8,"drama"],
+  ["Heat Waves","Glass Animals",2020,"rock pop",.6,"sad"],
+  ["Cruel Summer","Taylor Swift",2019,"pop",.8,"drama"],
+  ["Greedy","Tate McRae",2023,"pop",.8,"empower"],
+  ["Cut To The Feeling","Carly Rae Jepsen",2017,"pop electro",.9,"love"]
+];
+const DB = RAW.filter((r, i) => RAW.findIndex(q => q[0] === r[0] && q[1] === r[1]) === i).map(([t,a,y,g,e,m], i) => ({ id: "s" + i, t, a, y, g: g.split(" "), e, m }));
+const THIS_YEAR = 2026, NOW_FROM = 2022;
+
+// ---------- Quiz ----------
+const Q = [
+  { id: "year", type: "year", title: "In welchem Jahr hast du das Licht der Welt erblickt?", hint: "Damit finden wir die Songs, die deine Jugend geprägt haben." },
+  { id: "mix", type: "single", title: "Dein Soundtrack soll klingen nach …", options: [
+    { v: "then", t: "Damals", s: "Nur Hits aus deiner Jugend" },
+    { v: "both", t: "Beides, bitte", s: "3 von damals, 3 von heute" },
+    { v: "now", t: "Heute", s: "Was gerade überall läuft" } ] },
+  { id: "device", type: "single", title: "Mit 16 lief deine Musik über …", options: [
+    { v: "tape", t: "Kassette und Walkman", s: "Bleistift zum Zurückspulen inklusive" },
+    { v: "mp3", t: "MP3-Player", s: "512 MB, randvoll" },
+    { v: "yt", t: "YouTube", s: "Musikvideos in Dauerschleife" },
+    { v: "tiktok", t: "TikTok und Spotify", s: "15 Sekunden reichen für einen Ohrwurm" } ] },
+  { id: "party", type: "single", title: "Auf einer Party findet man dich …", options: [
+    { v: "dance", t: "Auf der Tanzfläche", s: "Bis das Licht angeht" },
+    { v: "kitchen", t: "In der Küche", s: "Die besten Gespräche passieren dort" },
+    { v: "dj", t: "Am DJ-Pult", s: "Jemand muss ja die Musik retten" },
+    { v: "bed", t: "Um 23 Uhr im Bett", s: "Ehrlich ist das neue Cool" } ] },
+  { id: "heart", type: "single", title: "Wie geht's deinem Herzen gerade?", options: [
+    { v: "love", t: "Frisch verliebt", s: "Alles rosarot" },
+    { v: "drama", t: "Es ist kompliziert", s: "Lange Geschichte" },
+    { v: "empower", t: "Single und glücklich", s: "Ich bin mein eigenes Date" },
+    { v: "sad", t: "Liebeskummer", s: "Bitte Taschentücher reichen" } ] },
+  { id: "genres", type: "multi", title: "Fenster runter, Autobahn. Was läuft?", hint: "Mehrere gehen auch.", options: [
+    { v: "pop", t: "Pop" }, { v: "hiphop", t: "Hip-Hop und R'n'B" }, { v: "rock", t: "Rock und Indie" },
+    { v: "electro", t: "Elektro und Dance" }, { v: "deutsch", t: "Deutsch" } ] },
+  { id: "guilty", type: "text", title: "Welchen Song liebst du heimlich, auch wenn er peinlich ist?", hint: "Tipp einen Vorschlag an oder schreib deinen eigenen. Wir verraten's niemandem." }
+];
+
+const S = {
+  screen: "start", q: 0,
+  a: { year: 1992, genres: [] },
+  songs: [], alts: [], open: -1,
+  photos: [], style: "tape", beat: true
+};
+const $ = s => document.querySelector(s);
+const view = $("#view");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function toast(msg) {
+  const el = $("#toast"); el.textContent = msg; el.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 3200);
+}
+function youth() {
+  const y = S.a.year;
+  return [y + 12, Math.min(y + 22, THIS_YEAR)];
+}
+
+// ---------- Render ----------
+function render() {
+  stopReel(); PV.audio.pause(); PV.i = -1;
+  const sc = S.screen;
+  $("#back").hidden = sc === "start";
+  const total = Q.length + 3;
+  const pos = sc === "quiz" ? S.q + 1 : sc === "songs" ? Q.length + 1 : sc === "photos" ? Q.length + 2 : sc === "reel" ? total : 0;
+  $("#progress").hidden = sc === "start";
+  $("#bar").style.width = (pos / total * 100) + "%";
+  $("#stepinfo").textContent = sc === "quiz" ? `${S.q + 1} / ${Q.length}` : "";
+  view.innerHTML = "";
+  view.className = "fade";
+  void view.offsetWidth;
+  ({ start: renderStart, quiz: renderQuiz, songs: renderSongs, photos: renderPhotos, reel: renderReel })[sc]();
+  window.scrollTo(0, 0);
+}
+
+function renderStart() {
+  view.innerHTML = `
+    <p class="eyebrow">7 Fragen · 6 Songs · 1 Reel</p>
+    <h1>Welche 6 Songs sind der Soundtrack deines Herzens?</h1>
+    <p class="muted">Ein paar lustige Fragen, und du bekommst dein persönliches Mixtape aus Jugend-Hits und Songs von heute. Mit deinen Fotos wird daraus ein Reel für Instagram und TikTok.</p>
+    <div class="tape" aria-hidden="true">
+      <div class="tape-label">
+        <div class="hand">Mein Soundtrack</div>
+        <div class="sub"><span>Seite A · damals</span><span>Seite B · heute</span></div>
+      </div>
+      <div class="reels"><div class="reel"></div><div class="reel"></div></div>
+      <div class="sample">
+        <b>A1</b><span>Wonderwall · Oasis · 1995</span>
+        <b>A2</b><span>Mr. Brightside · The Killers · 2004</span>
+        <b>B1</b><span>Espresso · Sabrina Carpenter · 2024</span>
+      </div>
+    </div>
+    <div class="stack">
+      <button class="btn" id="go">Los geht's</button>
+      <div class="facts"><span>dauert 1 Minute</span><span>ohne Anmeldung</span><span>Fotos bleiben auf deinem Handy</span></div>
+      <button class="back" id="legal" style="text-align:left;text-decoration:underline">Datenschutz</button>
+    </div>`;
+  $("#legal").onclick = openLegal;
+  $("#go").onclick = () => { S.screen = "quiz"; S.q = 0; render(); };
+}
+
+function renderQuiz() {
+  const q = Q[S.q];
+  const head = `<p class="eyebrow">Frage ${S.q + 1}</p><h2 id="qt">${esc(q.title)}</h2>${q.hint ? `<p class="muted">${esc(q.hint)}</p>` : ""}`;
+  const keys = "ABCDE";
+  if (q.type === "year") {
+    view.innerHTML = head + `
+      <div class="yearbox">
+        <div class="yearline">
+          <button class="round" id="minus" aria-label="Ein Jahr früher">−</button>
+          <div class="bigyear" id="yv" aria-live="polite"></div>
+          <button class="round" id="plus" aria-label="Ein Jahr später">+</button>
+        </div>
+        <label class="sr" for="yr">Geburtsjahr</label>
+        <input type="range" id="yr" min="1975" max="2010" step="1">
+        <p class="window" id="yw"></p>
+      </div>
+      <button class="btn" id="next">Weiter</button>`;
+    const yr = $("#yr"); yr.value = S.a.year;
+    const upd = () => {
+      S.a.year = +yr.value; $("#yv").textContent = S.a.year;
+      const [a, b] = youth(); const age = THIS_YEAR - S.a.year;
+      $("#yw").innerHTML = `Du bist ungefähr <b>${age}</b>. Deine Jugend-Hits suchen wir zwischen <b>${a}</b> und <b>${b}</b>.`;
+    };
+    yr.oninput = upd;
+    $("#minus").onclick = () => { yr.value = +yr.value - 1; upd(); };
+    $("#plus").onclick = () => { yr.value = +yr.value + 1; upd(); };
+    $("#next").onclick = next;
+    upd();
+  } else if (q.type === "single") {
+    view.innerHTML = head + `<div class="options" role="group" aria-labelledby="qt">${q.options.map((o, i) => `
+      <button class="opt" data-v="${o.v}" aria-pressed="${S.a[q.id] === o.v}"><span class="key">${keys[i]}</span><span><span class="t">${esc(o.t)}</span><span class="s">${esc(o.s)}</span></span></button>`).join("")}</div>`;
+    view.querySelectorAll(".opt").forEach(b => b.onclick = () => {
+      S.a[q.id] = b.dataset.v;
+      view.querySelectorAll(".opt").forEach(x => x.setAttribute("aria-pressed", x === b));
+      setTimeout(next, 260);
+    });
+  } else if (q.type === "multi") {
+    const sel = S.a.genres;
+    view.innerHTML = head + `<div class="options" role="group" aria-labelledby="qt">${q.options.map((o, i) => `
+      <button class="opt" data-v="${o.v}" aria-pressed="${sel.includes(o.v)}"><span class="key">${keys[i]}</span><span class="t">${esc(o.t)}</span></button>`).join("")}</div>
+      <div class="row"><button class="btn ghost" id="all" style="flex:1">Alles!</button><button class="btn" id="next" style="flex:2">Weiter</button></div>`;
+    const sync = () => { $("#next").disabled = sel.length === 0; };
+    view.querySelectorAll(".opt").forEach(b => b.onclick = () => {
+      const v = b.dataset.v, i = sel.indexOf(v);
+      i < 0 ? sel.push(v) : sel.splice(i, 1);
+      b.setAttribute("aria-pressed", i < 0); sync();
+    });
+    $("#all").onclick = () => { S.a.genres = q.options.map(o => o.v); next(); };
+    $("#next").onclick = next; sync();
+  } else if (q.type === "text") {
+    const [a, b] = youth();
+    const cheesy = DB.filter(s => s.y >= a - 2 && s.y <= b && s.e >= .8).sort((x, y) => hash(x.t + S.a.year) - hash(y.t + S.a.year)).slice(0, 4);
+    view.innerHTML = head + `
+      <label class="sr" for="gp">Dein Song</label>
+      <input class="textin" id="gp" placeholder="z. B. Barbie Girl – Aqua" autocomplete="off" value="${esc(S.a.guilty || "")}">
+      <div class="chips">${cheesy.map(s => `<button class="chip" data-t="${esc(s.t + " – " + s.a)}">${esc(s.t)}</button>`).join("")}</div>
+      <div class="stack"><button class="btn" id="next">Mein Soundtrack zeigen</button><button class="btn ghost" id="skip">Überspringen</button></div>`;
+    view.querySelectorAll(".chip").forEach(c => c.onclick = () => { $("#gp").value = c.dataset.t; });
+    $("#next").onclick = () => { S.a.guilty = $("#gp").value.trim(); finishQuiz(); };
+    $("#skip").onclick = () => { S.a.guilty = ""; finishQuiz(); };
+  }
+}
+function next() { if (S.q < Q.length - 1) { S.q++; render(); } else finishQuiz(); }
+
+// ---------- Matching ----------
+function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; }
+function score(s) {
+  const G = S.a.genres.length ? S.a.genres : ["pop", "hiphop", "rock", "electro", "deutsch"];
+  const et = { dance: .9, kitchen: .55, dj: .8, bed: .3 }[S.a.party] ?? .7;
+  return (s.g.some(g => G.includes(g)) ? 3 : 0) + (s.m === S.a.heart ? 2 : 0) + 2 * (1 - Math.abs(s.e - et)) + hash(s.t + S.a.year) * .9;
+}
+function choose(pool, n, taken) {
+  const sorted = pool.filter(s => !taken.has(s.id)).sort((x, y) => score(y) - score(x));
+  const out = [], perYear = {};
+  for (const s of sorted) {
+    if (out.length >= n) break;
+    if ((perYear[s.y] || 0) >= 2) continue;
+    out.push(s); perYear[s.y] = (perYear[s.y] || 0) + 1; taken.add(s.id);
+  }
+  return out;
+}
+function finishQuiz() {
+  const [a, b] = youth();
+  let pad = 0, thenPool = [];
+  do { thenPool = DB.filter(s => s.y >= a - pad && s.y <= b + pad); pad += 2; } while (thenPool.length < 12 && pad < 20);
+  const nowPool = DB.filter(s => s.y >= NOW_FROM);
+  const guilty = parseOwn(S.a.guilty);
+  const slots = guilty ? 5 : 6;
+  let nThen = { then: slots, now: 0, both: Math.ceil(slots / 2) }[S.a.mix || "both"];
+  const taken = new Set();
+  if (guilty && guilty.id) taken.add(guilty.id);
+  const thenPick = choose(thenPool, nThen, taken);
+  const nowPick = choose(nowPool, slots - thenPick.length, taken);
+  const list = [...thenPick.sort((x, y) => x.y - y.y), ...nowPick.sort((x, y) => x.y - y.y)];
+  if (guilty) list.push({ ...guilty, guilty: true });
+  S.songs = list.map(s => ({ ...s, side: s.y && s.y >= NOW_FROM && !(S.a.mix === "then") ? "now" : "then" }));
+  if (guilty) S.songs[S.songs.length - 1].side = "guilty";
+  S.style = { tape: "tape", mp3: "polaroid", yt: "polaroid", tiktok: "neon" }[S.a.device] || "tape";
+  S.open = -1;
+  S.screen = "songs"; render();
+}
+function parseOwn(txt) {
+  if (!txt) return null;
+  const [t, a] = txt.split(/\s+[–—-]\s+/);
+  const hit = DB.find(s => s.t.toLowerCase() === t.trim().toLowerCase());
+  if (hit) return { ...hit };
+  return { id: "own-" + hash(txt), t: t.trim(), a: (a || "").trim(), y: null, g: [], e: .7, m: "love", own: true };
+}
+function alternatives(i) {
+  const cur = S.songs[i];
+  const ids = new Set(S.songs.map(s => s.id));
+  let pool;
+  if (cur.side === "now") pool = DB.filter(s => s.y >= NOW_FROM);
+  else { const [a, b] = youth(); pool = DB.filter(s => s.y >= a - 3 && s.y <= b + 3); }
+  return pool.filter(s => !ids.has(s.id)).sort((x, y) => score(y) - score(x)).slice(0, 3);
+}
+function reason(s) {
+  if (s.guilty) return "Dein Guilty Pleasure. Bleibt unter uns.";
+  if (s.own) return "Von dir eingetragen.";
+  const heartLine = { love: "Passt zum Herzklopfen gerade.", drama: "Für alles, was gerade kompliziert ist.", empower: "Für dich und nur dich.", sad: "Darf auch mal wehtun." };
+  const opts = [s.e >= .8 ? "Bringt dich auf die Tanzfläche." : s.e <= .4 ? "Zum Runterkommen." : "Mitsingen ausdrücklich erlaubt.", "Lauter drehen erlaubt."];
+  if (s.m === S.a.heart) opts.push(heartLine[s.m], heartLine[s.m]);
+  const tail = opts[Math.floor(hash(s.t) * opts.length) % opts.length];
+  const age = s.y - S.a.year;
+  if (s.side === "now") return `Läuft ${s.y >= THIS_YEAR - 1 ? "gerade" : "seit " + s.y} überall. ${tail}`;
+  if (age >= 8 && age <= 30) return `${s.y} warst du ${age}. ${tail}`;
+  return `Ein Klassiker aus ${s.y}. ${tail}`;
+}
+function trackNo(i) {
+  const sideA = S.songs.filter(s => s.side === "then").length;
+  return i < sideA ? "A" + (i + 1) : "B" + (i - sideA + 1);
+}
+
+// ---------- Songs ----------
+function renderSongs() {
+  const [a, b] = youth();
+  let html = `<p class="eyebrow">Dein Mixtape</p><h2>Diese 6 Songs passen zu dir</h2>
+    <p class="muted">Tausch aus, was nicht passt, oder trag deinen eigenen Song ein. Mit den Pfeilen änderst du die Reihenfolge.</p><div class="songs">`;
+  let lastSide = null;
+  S.songs.forEach((s, i) => {
+    const label = s.side === "now" ? "Seite B · heute" : s.side === "guilty" ? "Bonustrack" : `Seite A · ${a} bis ${b}`;
+    if (label !== lastSide) { html += `<p class="side">${label}</p>`; lastSide = label; }
+    html += `<div class="song">
+      <span class="no">${trackNo(i)}</span>
+      <div class="info"><div class="title">${esc(s.t)}</div><div class="meta">${esc(s.a || "Interpret unbekannt")}${s.y ? " · " + s.y : ""}</div><div class="why">${esc(reason(s))}</div></div>
+      <div class="moves"><button class="icon" data-up="${i}" aria-label="Nach oben" ${i === 0 ? "disabled" : ""}>↑</button><button class="icon" data-down="${i}" aria-label="Nach unten" ${i === S.songs.length - 1 ? "disabled" : ""}>↓</button></div>
+      <div class="acts"><button class="pill" data-play="${i}">▶ Reinhören</button><button class="pill ${S.open === i ? "on" : ""}" data-swap="${i}" aria-expanded="${S.open === i}">Tauschen</button></div>
+      ${S.open === i ? swapPanel(i) : ""}
+    </div>`;
+  });
+  html += `</div><button class="btn" id="next">Weiter zu den Fotos</button>`;
+  view.innerHTML = html;
+  view.querySelectorAll("[data-up]").forEach(b => b.onclick = () => move(+b.dataset.up, -1));
+  view.querySelectorAll("[data-down]").forEach(b => b.onclick = () => move(+b.dataset.down, 1));
+  view.querySelectorAll("[data-play]").forEach(b => b.onclick = () => preview(+b.dataset.play, b));
+  if (PV.btn && document.contains(PV.btn) === false) { PV.audio.pause(); PV.i = -1; }
+  view.querySelectorAll("[data-swap]").forEach(b => b.onclick = () => { const i = +b.dataset.swap; S.open = S.open === i ? -1 : i; keepScroll(renderSongs); });
+  view.querySelectorAll("[data-alt]").forEach(b => b.onclick = () => {
+    const i = S.open, s = DB.find(x => x.id === b.dataset.alt);
+    S.songs[i] = { ...s, side: S.songs[i].side === "guilty" ? "then" : S.songs[i].side };
+    S.open = -1; keepScroll(renderSongs); toast(`${s.t} ist jetzt dabei.`);
+  });
+  const ownBtn = $("#ownadd");
+  if (ownBtn) ownBtn.onclick = () => {
+    const t = $("#ownt").value.trim(), ar = $("#owna").value.trim();
+    if (!t) { $("#ownt").focus(); toast("Gib zuerst den Songtitel ein."); return; }
+    const side = S.songs[S.open].side;
+    S.songs[S.open] = { id: "own-" + hash(t + ar), t, a: ar, y: null, g: [], e: .7, m: "love", own: true, side };
+    S.open = -1; keepScroll(renderSongs); toast(`${t} ist jetzt dabei.`);
+  };
+  $("#next").onclick = () => { S.screen = "photos"; render(); };
+}
+// ---------- Song previews: official 30-second clips from the Apple iTunes Search API (no key needed) ----------
+const PV = { audio: new Audio(), cache: {}, i: -1, btn: null };
+PV.audio.preload = "none";
+PV.audio.onended = () => { setBtn(PV.btn, false); PV.i = -1; };
+function setBtn(b, on) { if (b && document.contains(b)) b.textContent = on ? "❚❚ Pause" : "▶ Reinhören"; }
+async function findPreview(s) {
+  const key = s.id; if (key in PV.cache) return PV.cache[key];
+  const q = encodeURIComponent(`${s.t} ${s.a || ""}`.replace(/\s*&\s*|\s+ft\.\s+/gi, " "));
+  const r = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=5&country=de`);
+  if (!r.ok) throw new Error("http " + r.status);
+  const list = (await r.json()).results || [];
+  const norm = x => String(x).toLowerCase().replace(/[^a-z0-9äöüß]+/g, " ").trim();
+  const hit = list.find(x => x.previewUrl && norm(x.trackName).startsWith(norm(s.t).slice(0, 12))) || null;
+  return (PV.cache[key] = hit && { url: hit.previewUrl, cover: hit.artworkUrl100 });
+}
+async function preview(i, btn) {
+  if (PV.i === i && !PV.audio.paused) { PV.audio.pause(); setBtn(btn, false); return; }
+  PV.audio.pause(); setBtn(PV.btn, false);
+  PV.i = i; PV.btn = btn; btn.disabled = true; btn.textContent = "Lädt …";
+  try {
+    const p = await findPreview(S.songs[i]);
+    if (!p) { toast("Für diesen Song gibt es keine Vorschau."); btn.textContent = "▶ Reinhören"; PV.i = -1; return; }
+    if (PV.i !== i) return;
+    PV.audio.src = p.url; await PV.audio.play(); setBtn(btn, true);
+  } catch (e) {
+    btn.textContent = "▶ Reinhören"; PV.i = -1;
+    toast("Die Vorschau lässt sich hier nicht laden. Probier die App-Version im normalen Browser.");
+  } finally { btn.disabled = false; }
+}
+
+function swapPanel(i) {
+  const alts = alternatives(i);
+  return `<div class="swap">${alts.map(s => `<button class="alt" data-alt="${s.id}"><b>${esc(s.t)}</b><small>${esc(s.a)} · ${s.y}</small></button>`).join("")}
+    <div class="own"><input id="ownt" placeholder="Eigener Song" aria-label="Songtitel"><input id="owna" placeholder="Interpret" aria-label="Interpret"><button class="btn small" id="ownadd">Rein</button></div></div>`;
+}
+function move(i, d) {
+  const j = i + d; if (j < 0 || j >= S.songs.length) return;
+  [S.songs[i], S.songs[j]] = [S.songs[j], S.songs[i]];
+  keepScroll(renderSongs);
+}
+function keepScroll(fn) { const y = window.scrollY; view.innerHTML = ""; fn(); window.scrollTo(0, y); }
+
+// ---------- Photos ----------
+function renderPhotos() {
+  view.innerHTML = `<p class="eyebrow">Deine Bilder</p><h2>Welche Fotos gehören zu deinem Soundtrack?</h2>
+    <p class="muted">Bis zu 12 Fotos. Jedes Bild bekommt einen Song. Ohne Fotos bauen wir dein Reel aus Jahreszahlen und Farben.</p>
+    <div class="drop">
+      <div class="row">
+        <label class="btn" for="cam" style="flex:1">Foto machen</label>
+        <label class="btn ghost" for="pick" style="flex:1">Aus Galerie</label>
+      </div>
+      <input type="file" id="cam" accept="image/*" capture="environment" class="sr">
+      <input type="file" id="pick" accept="image/*" multiple class="sr">
+      <div class="grid" id="grid"></div>
+      <p class="note">Deine Fotos bleiben auf deinem Gerät. Nichts wird hochgeladen.</p>
+    </div>
+    <button class="btn" id="next">${S.photos.length ? "Reel ansehen" : "Ohne Fotos weiter"}</button>`;
+  const grid = $("#grid");
+  const draw = () => {
+    grid.innerHTML = S.photos.map((p, i) => `<div class="thumb"><img src="${p.src}" alt="Foto ${i + 1}"><button data-rm="${i}" aria-label="Foto ${i + 1} entfernen">✕</button></div>`).join("");
+    grid.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => { S.photos.splice(+b.dataset.rm, 1); draw(); });
+    $("#next").textContent = S.photos.length ? "Reel ansehen" : "Ohne Fotos weiter";
+  };
+  const add = files => {
+    [...files].slice(0, 12 - S.photos.length).forEach(f => {
+      const r = new FileReader();
+      r.onload = () => { const img = new Image(); img.onload = () => { S.photos.push({ src: r.result, img }); draw(); }; img.src = r.result; };
+      r.readAsDataURL(f);
+    });
+  };
+  $("#cam").onchange = e => add(e.target.files);
+  $("#pick").onchange = e => add(e.target.files);
+  $("#next").onclick = () => { S.screen = "reel"; render(); };
+  draw();
+}
+
+// ---------- Reel (canvas preview + self-made placeholder beat) ----------
+const W = 720, H = 1280, BPM = 120, SEG = 2, INTRO = 2, OUTRO = 3;
+const TOTAL = INTRO + 6 * SEG + OUTRO;
+let R = null;
+
+function renderReel() {
+  view.innerHTML = `<p class="eyebrow">Dein Reel</p><h2>Fertig zum Teilen</h2>
+    <div class="stage"><canvas id="cv" width="${W}" height="${H}" aria-label="Vorschau deines Reels"></canvas><button class="playbtn" id="play" aria-label="Abspielen">▶</button></div>
+    <div class="seg" role="group" aria-label="Stil">
+      <button data-st="tape" aria-pressed="${S.style === "tape"}">Kassette</button>
+      <button data-st="polaroid" aria-pressed="${S.style === "polaroid"}">Polaroid</button>
+      <button data-st="neon" aria-pressed="${S.style === "neon"}">Neon</button>
+    </div>
+    <div class="ctrl">
+      <label class="toggle"><input type="checkbox" id="beat" ${S.beat ? "checked" : ""}> Platzhalter-Beat</label>
+      <button class="btn small ghost" id="again">Neues Quiz</button>
+    </div>
+    <button class="btn" id="share">Auf Instagram oder TikTok teilen</button>
+    <button class="btn ghost" id="save">Video erstellen (${TOTAL} Sekunden)</button>
+    <p class="note">Der Beat ist selbst erzeugt und lizenzfrei. Die Original-Songs legst du beim Teilen aus der Musikbibliothek von Instagram oder TikTok drüber.</p>`;
+  const cv = $("#cv"), ctx = cv.getContext("2d");
+  R = { ctx, playing: false, t0: 0, paused: 0.6, raf: 0, ac: null, timer: 0 };
+  view.querySelectorAll("[data-st]").forEach(b => b.onclick = () => {
+    S.style = b.dataset.st;
+    view.querySelectorAll("[data-st]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    if (!R.playing) drawFrame(R.paused);
+  });
+  $("#beat").onchange = e => { S.beat = e.target.checked; if (R.master) R.master.gain.value = S.beat ? .8 : 0; };
+  $("#play").onclick = togglePlay;
+  cv.onclick = () => { if (R.playing) togglePlay(); };
+  $("#again").onclick = () => { S.screen = "start"; S.a = { year: S.a.year, genres: [] }; render(); };
+  $("#share").onclick = openShare;
+  $("#save").onclick = exportVideo;
+  const fonts = ['800 60px "Bricolage Grotesque"', '600 60px "Caveat"', '500 30px "JetBrains Mono"', '700 30px "Figtree"'];
+  const ready = document.fonts ? Promise.all(fonts.map(f => document.fonts.load(f).catch(() => null))) : Promise.resolve();
+  drawFrame(R.paused);
+  ready.then(() => { if (R && !R.playing) drawFrame(R.paused); });
+}
+function stopReel() {
+  if (!R) return;
+  cancelAnimationFrame(R.raf); clearInterval(R.timer);
+  if (R.ac) R.ac.close().catch(() => {});
+  R = null;
+}
+function clock() { return R.ac ? R.ac.currentTime : performance.now() / 1000; }
+function togglePlay() {
+  const btn = $("#play");
+  if (R.playing) {
+    R.playing = false; R.paused = (clock() - R.t0) % TOTAL;
+    cancelAnimationFrame(R.raf); clearInterval(R.timer);
+    if (R.ac) R.ac.suspend();
+    btn.hidden = false; return;
+  }
+  if (!R.ac) {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      R.ac = new AC(); R.master = R.ac.createGain(); R.master.gain.value = S.beat ? .8 : 0; R.master.connect(R.ac.destination); R.dest = R.ac.createMediaStreamDestination(); R.master.connect(R.dest);
+      const len = R.ac.sampleRate * .3, buf = R.ac.createBuffer(1, len, R.ac.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      R.noise = buf;
+    } catch (e) { R.ac = null; }
+  }
+  const startPlay = () => {
+    // restart beats from the bar that contains the paused position so visuals and beat stay aligned
+    R.paused = Math.floor(R.paused / .25) * .25;
+    R.t0 = clock() - R.paused; R.playing = true; btn.hidden = true;
+    if (R.ac) {
+      R.step = Math.round(R.paused / .25); R.nextT = R.t0 + R.step * .25;
+      R.timer = setInterval(schedule, 25); schedule();
+    }
+    const loop = () => { if (!R || !R.playing) return; drawFrame((clock() - R.t0) % TOTAL); R.raf = requestAnimationFrame(loop); };
+    loop();
+  };
+  if (R.ac) R.ac.resume().then(startPlay, startPlay); else startPlay();
+}
+function schedule() {
+  if (!R || !R.ac) return;
+  const ac = R.ac;
+  while (R.nextT < ac.currentTime + .12) {
+    const t = R.nextT, i = R.step % (TOTAL * 4);
+    if (i % 2 === 0) kick(t);
+    else hat(t);
+    if (i % 4 === 2) clap(t);
+    if (i % 8 === 0) bass(t, [45, 41, 48, 43][Math.floor(i / 8) % 4]);
+    R.step++; R.nextT += .25;
+  }
+}
+function kick(t) { const ac = R.ac, o = ac.createOscillator(), g = ac.createGain(); o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + .18); g.gain.setValueAtTime(.9, t); g.gain.exponentialRampToValueAtTime(.001, t + .3); o.connect(g).connect(R.master); o.start(t); o.stop(t + .32); }
+function noiseHit(t, freq, dur, vol) { const ac = R.ac, s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain(); s.buffer = R.noise; f.type = "highpass"; f.frequency.value = freq; g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur); s.connect(f).connect(g).connect(R.master); s.start(t); s.stop(t + dur + .02); }
+function hat(t) { noiseHit(t, 7000, .05, .18); }
+function clap(t) { noiseHit(t, 1500, .14, .35); }
+function bass(t, midi) { const ac = R.ac, o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain(); o.type = "sawtooth"; o.frequency.value = 440 * Math.pow(2, (midi - 69) / 12); f.type = "lowpass"; f.frequency.value = 420; g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(.22, t + .03); g.gain.setValueAtTime(.22, t + 1.6); g.gain.exponentialRampToValueAtTime(.001, t + 1.95); o.connect(f).connect(g).connect(R.master); o.start(t); o.stop(t + 2); }
+
+// --- canvas helpers ---
+const C = { ink: "#1a1430", surf: "#261e42", heart: "#ff4d6d", butter: "#ffd166", lilac: "#b9a7ff", label: "#fbf3e4", labelInk: "#2a2140", text: "#f7f2ff" };
+const FILLS = ["#ff4d6d", "#ffd166", "#b9a7ff", "#5ee3c1", "#ff8a5b", "#7cc6ff"];
+const F = { d: s => `800 ${s}px "Bricolage Grotesque", system-ui, sans-serif`, h: s => `600 ${s}px Caveat, cursive`, m: s => `500 ${s}px "JetBrains Mono", monospace`, b: s => `700 ${s}px Figtree, system-ui, sans-serif` };
+function wrap(ctx, text, maxW) {
+  const words = String(text).split(" "), lines = []; let line = "";
+  for (const w of words) { const test = line ? line + " " + w : w; if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test; }
+  if (line) lines.push(line); return lines;
+}
+function fitText(ctx, text, font, size, maxW, maxLines) {
+  let s = size, lines;
+  do { ctx.font = font(s); lines = wrap(ctx, text, maxW); s -= 4; } while ((lines.length > maxLines || lines.some(l => ctx.measureText(l).width > maxW)) && s > 20);
+  return { lines, size: s + 4 };
+}
+function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+function photoArea(ctx, x, y, w, h, i, p, song) {
+  const ph = S.photos.length ? S.photos[i % S.photos.length].img : null;
+  ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+  if (ph) {
+    const z = 1.04 + .08 * p, ir = ph.width / ph.height, ar = w / h;
+    let dw, dh; if (ir > ar) { dh = h * z; dw = dh * ir; } else { dw = w * z; dh = dw / ir; }
+    ctx.drawImage(ph, x + (w - dw) / 2 - 20 * p, y + (h - dh) / 2, dw, dh);
+  } else {
+    ctx.fillStyle = FILLS[i % FILLS.length]; ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = "rgba(26,20,48,.18)";
+    ctx.font = F.d(Math.round(w * .42)); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(song && song.y ? String(song.y) : "♥", x + w / 2 - 30 * p, y + h / 2);
+  }
+  ctx.restore();
+}
+function pulse(t) { const b = (t % .5) / .5; return 1 + .025 * Math.exp(-b * 8); }
+
+function drawFrame(t) {
+  if (!R) return;
+  const ctx = R.ctx; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic"; ctx.globalAlpha = 1;
+  if (t < INTRO) return drawIntro(ctx, t);
+  if (t >= INTRO + 6 * SEG) return drawOutro(ctx, t - INTRO - 6 * SEG);
+  const i = Math.floor((t - INTRO) / SEG), p = ((t - INTRO) % SEG) / SEG;
+  const s = S.songs[i] || { t: "", a: "" };
+  ({ tape: drawTape, polaroid: drawPolaroid, neon: drawNeon })[S.style](ctx, s, i, p, t);
+  if (p < .08) { ctx.fillStyle = `rgba(255,255,255,${(1 - p / .08) * .5})`; ctx.fillRect(0, 0, W, H); }
+  ctx.fillStyle = "rgba(255,255,255,.25)"; ctx.fillRect(0, H - 8, W, 8);
+  ctx.fillStyle = C.heart; ctx.fillRect(0, H - 8, W * (t / TOTAL), 8);
+}
+function drawIntro(ctx, t) {
+  const p = t / INTRO;
+  ctx.fillStyle = S.style === "polaroid" ? C.butter : C.ink; ctx.fillRect(0, 0, W, H);
+  const fg = S.style === "polaroid" ? C.labelInk : C.text;
+  if (S.photos.length) { ctx.globalAlpha = .35; photoArea(ctx, 0, 0, W, H, 0, p); ctx.globalAlpha = 1; }
+  ctx.fillStyle = fg; ctx.font = F.m(26); ctx.fillText(`JAHRGANG ${S.a.year} · 6 SONGS`, 60, 420);
+  ctx.save(); ctx.translate(60, 560); const k = pulse(t); ctx.scale(k, k);
+  ctx.font = F.d(118); ctx.fillStyle = fg;
+  ["Soundtrack", "of my"].forEach((l, j) => ctx.fillText(l, 0, j * 118));
+  ctx.fillStyle = C.heart; ctx.fillText("Heart", 0, 236); ctx.restore();
+  ctx.fillStyle = fg; ctx.font = F.h(54); ctx.fillText(`Seite A: ${youth()[0]} bis ${youth()[1]}`, 60, 940);
+}
+function drawOutro(ctx, t) {
+  ctx.fillStyle = S.style === "polaroid" ? C.butter : C.ink; ctx.fillRect(0, 0, W, H);
+  const fg = S.style === "polaroid" ? C.labelInk : C.text;
+  ctx.fillStyle = fg; ctx.font = F.d(76); ctx.fillText("Mein Soundtrack", 60, 250);
+  S.songs.forEach((s, i) => {
+    const y = 360 + i * 130, a = Math.min(1, Math.max(0, (t - i * .15) / .3));
+    ctx.globalAlpha = a;
+    ctx.fillStyle = C.heart; ctx.font = F.m(28); ctx.fillText(trackNo(i), 60, y);
+    const ft = fitText(ctx, s.t, F.b, 40, 520, 1); ctx.fillStyle = fg; ctx.font = F.b(ft.size); ctx.fillText(ft.lines[0], 140, y);
+    ctx.font = F.m(22); ctx.globalAlpha = a * .7; ctx.fillText(`${s.a || ""}${s.y ? " · " + s.y : ""}`.slice(0, 44), 140, y + 40);
+  });
+  ctx.globalAlpha = 1; ctx.fillStyle = fg; ctx.font = F.h(46); ctx.fillText("Und was ist deiner?", 60, 1180);
+}
+function drawTape(ctx, s, i, p, t) {
+  ctx.fillStyle = C.ink; ctx.fillRect(0, 0, W, H);
+  photoArea(ctx, 50, 110, 620, 720, i, p, s);
+  // cassette label
+  const ly = 870; ctx.fillStyle = C.surf; rr(ctx, 40, ly, 640, 330, 28); ctx.fill();
+  ctx.fillStyle = C.label; rr(ctx, 64, ly + 24, 592, 170, 14); ctx.fill();
+  ctx.fillStyle = C.heart; ctx.fillRect(64, ly + 54, 592, 6);
+  ctx.fillStyle = C.labelInk; ctx.font = F.m(22); ctx.fillText(trackNo(i) + "   SOUNDTRACK OF MY HEART", 84, ly + 46);
+  const ft = fitText(ctx, s.t, F.h, 64, 552, 1); ctx.font = F.h(ft.size); ctx.fillText(ft.lines[0], 84, ly + 122);
+  ctx.font = F.m(22); ctx.globalAlpha = .75; ctx.fillText(`${s.a || ""}${s.y ? " · " + s.y : ""}`.slice(0, 40), 84, ly + 170); ctx.globalAlpha = 1;
+  [210, 510].forEach(cx => {
+    const cy = ly + 262; ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(cx, cy, 44, 0, 7); ctx.fill();
+    ctx.strokeStyle = C.label; ctx.lineWidth = 10; ctx.beginPath(); ctx.arc(cx, cy, 40, 0, 7); ctx.stroke();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(t * 3); ctx.lineWidth = 7;
+    for (let k = 0; k < 3; k++) { ctx.rotate(Math.PI / 3 * 2); ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 26); ctx.stroke(); }
+    ctx.restore();
+  });
+  ctx.fillStyle = C.label; ctx.fillRect(254, ly + 252, 212, 20);
+}
+function drawPolaroid(ctx, s, i, p, t) {
+  ctx.fillStyle = [C.butter, C.lilac, "#ffb4c2"][i % 3]; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = C.labelInk; ctx.font = F.d(150); ctx.globalAlpha = .12; ctx.fillText(trackNo(i), 40, 190); ctx.globalAlpha = 1;
+  ctx.save(); ctx.translate(W / 2, 640); ctx.rotate([-3, 2.5, -2, 3, -1.5, 2][i % 6] * Math.PI / 180); const k = pulse(t); ctx.scale(k, k);
+  ctx.shadowColor = "rgba(0,0,0,.25)"; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12;
+  ctx.fillStyle = "#fffdf8"; ctx.fillRect(-290, -380, 580, 760); ctx.shadowColor = "transparent";
+  photoArea(ctx, -258, -348, 516, 540, i, p, s);
+  ctx.fillStyle = C.labelInk; ctx.textAlign = "center";
+  const ft = fitText(ctx, s.t, F.h, 70, 500, 2); ctx.font = F.h(ft.size);
+  ft.lines.forEach((l, j) => ctx.fillText(l, 0, 262 + j * ft.size * .95 - (ft.lines.length - 1) * ft.size * .3));
+  ctx.restore(); ctx.textAlign = "left";
+  ctx.fillStyle = C.labelInk; ctx.font = F.m(26); ctx.fillText(`${s.a || ""}`.slice(0, 34), 70, 1110); ctx.globalAlpha = .7; ctx.fillText(s.y ? String(s.y) : "", 70, 1150); ctx.globalAlpha = 1;
+}
+function drawNeon(ctx, s, i, p, t) {
+  ctx.fillStyle = "#0d0a1c"; ctx.fillRect(0, 0, W, H);
+  photoArea(ctx, 0, 0, W, H, i, p, s);
+  const g = ctx.createLinearGradient(0, H * .35, 0, H); g.addColorStop(0, "rgba(13,10,28,0)"); g.addColorStop(1, "rgba(13,10,28,.92)");
+  ctx.fillStyle = "rgba(13,10,28,.25)"; ctx.fillRect(0, 0, W, H); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  if (s.y) { ctx.strokeStyle = "rgba(255,209,102,.55)"; ctx.lineWidth = 3; ctx.font = F.d(220); ctx.strokeText(String(s.y), 40 - 60 * p, 300); }
+  ctx.fillStyle = C.butter; ctx.font = F.m(28); ctx.fillText(trackNo(i) + " / " + (s.a || "").toUpperCase().slice(0, 30), 60, 900);
+  ctx.save(); const k = pulse(t); ctx.translate(60, 0);
+  const ft = fitText(ctx, s.t, F.d, 104, 600, 3); ctx.font = F.d(ft.size * k);
+  ctx.shadowColor = C.heart; ctx.shadowBlur = 36; ctx.fillStyle = "#fff";
+  ft.lines.forEach((l, j) => ctx.fillText(l, 0, 1000 + j * ft.size * .98));
+  ctx.restore();
+}
+
+// ---------- Video export (records the canvas and the placeholder beat, entirely on the device) ----------
+async function exportVideo() {
+  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) { toast("Dein Browser kann noch keine Videos erstellen. Bitte probiere Chrome oder Safari ab Version 17."); return; }
+  const btn = $("#save"); btn.disabled = true;
+  if (R.playing) togglePlay();
+  R.paused = 0;
+  togglePlay();
+  await new Promise(r => setTimeout(r, 60));
+  const cv = $("#cv"), stream = cv.captureStream(30);
+  if (S.beat && R.dest) R.dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+  const type = ["video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9,opus", "video/webm"].find(t => MediaRecorder.isTypeSupported(t)) || "";
+  const rec = new MediaRecorder(stream, type ? { mimeType: type, videoBitsPerSecond: 5e6 } : {}), chunks = [];
+  rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+  const t0 = performance.now();
+  const tick = setInterval(() => { btn.textContent = `Wird erstellt … ${Math.min(TOTAL, Math.round((performance.now() - t0) / 1000))} / ${TOTAL} s`; }, 250);
+  rec.start();
+  await new Promise(r => setTimeout(r, TOTAL * 1000 + 300));
+  const done = new Promise(r => rec.onstop = r); rec.stop(); await done;
+  clearInterval(tick);
+  if (R && R.playing) togglePlay();
+  btn.disabled = false; btn.textContent = `Video erstellen (${TOTAL} Sekunden)`;
+  const blob = new Blob(chunks, { type: rec.mimeType || "video/webm" });
+  const ext = blob.type.includes("mp4") ? "mp4" : "webm", url = URL.createObjectURL(blob);
+  const bg = document.createElement("div"); bg.className = "sheet-bg";
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="vt"><h2 id="vt" style="font-size:26px">Dein Video ist fertig</h2>
+    <video src="${url}" controls playsinline style="width:100%;max-height:52vh;border-radius:14px;background:#000"></video>
+    <button class="btn" id="vshare">Teilen oder speichern</button>
+    <a class="btn ghost" id="vdl" href="${url}" download="soundtrack-of-my-heart.${ext}" style="text-decoration:none">Als Datei laden</a>
+    <button class="btn ghost" id="vclose">Schließen</button></div>`;
+  document.body.appendChild(bg);
+  const close = () => { bg.remove(); URL.revokeObjectURL(url); };
+  bg.onclick = e => { if (e.target === bg) close(); };
+  bg.querySelector("#vclose").onclick = close;
+  bg.querySelector("#vshare").onclick = async () => {
+    const file = new File([blob], `soundtrack-of-my-heart.${ext}`, { type: blob.type });
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "Soundtrack of My Heart" }); return; } } catch (e) { if (e.name === "AbortError") return; }
+    toast("Halte das Video gedrückt oder nutze „Als Datei laden“.");
+  };
+}
+
+// ---------- Legal (placeholder texts, must be replaced before launch) ----------
+function openLegal() {
+  const bg = document.createElement("div"); bg.className = "sheet-bg";
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="lt"><h2 id="lt" style="font-size:26px">Datenschutz</h2>
+    <p>Deine Fotos, dein Geburtsjahr und deine Antworten werden nur in deinem Browser verarbeitet. Es gibt kein Konto, keine Cookies und kein Tracking. Nichts wird an einen Server gesendet.</p>
+    <p>Das Video entsteht auf deinem Gerät. Wenn du es teilst, gelten die Regeln von Instagram oder TikTok.</p>
+    <p class="why-box"><b>Hinweis zum Prototyp:</b> Impressum und die endgültige Datenschutzerklärung fehlen noch und müssen vor dem Start mit Name und Anschrift der Anbieterin ergänzt werden.</p>
+    <button class="btn ghost" id="lclose">Schließen</button></div>`;
+  document.body.appendChild(bg);
+  bg.onclick = e => { if (e.target === bg) bg.remove(); };
+  bg.querySelector("#lclose").onclick = () => bg.remove();
+}
+
+// ---------- Share sheet ----------
+function tracklist() { return "Mein Soundtrack of My Heart\n" + S.songs.map((s, i) => `${trackNo(i)}  ${s.t}${s.a ? " – " + s.a : ""}${s.y ? " (" + s.y + ")" : ""}`).join("\n"); }
+function openShare() {
+  const bg = document.createElement("div"); bg.className = "sheet-bg";
+  bg.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sht">
+    <h2 id="sht" style="font-size:26px">So teilst du dein Reel</h2>
+    <ol>
+      <li>Video speichern. Im Prototyp geht das noch nicht, in der App ist es ein Tipp.</li>
+      <li>In Instagram oder TikTok als Reel hochladen.</li>
+      <li>Auf „Musik hinzufügen" tippen und deine Songs aus der Liste unten suchen. Bei Instagram passen mehrere Songs in ein Reel.</li>
+    </ol>
+    <pre id="tl">${esc(tracklist())}</pre>
+    <button class="btn" id="copy">Songliste kopieren</button>
+    <div class="why-box"><b>Warum die Musik erst beim Teilen dazukommt:</b> Instagram und TikTok haben Lizenzen für ihre Musikbibliothek. Legst du die Songs dort drüber, bleibt dein Reel online und wird nicht stummgeschaltet.</div>
+    <button class="btn ghost" id="close">Schließen</button>
+  </div>`;
+  document.body.appendChild(bg);
+  const close = () => bg.remove();
+  bg.onclick = e => { if (e.target === bg) close(); };
+  bg.querySelector("#close").onclick = close;
+  bg.querySelector("#copy").onclick = () => {
+    const done = () => toast("Songliste kopiert.");
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(bg.querySelector("#tl")); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); toast("Markiert. Jetzt kopieren."); };
+    try { navigator.clipboard.writeText(tracklist()).then(done, fallback); } catch (e) { fallback(); }
+  };
+  bg.querySelector("#copy").focus();
+}
+
+$("#back").onclick = () => {
+  if (S.screen === "quiz") { if (S.q > 0) S.q--; else S.screen = "start"; }
+  else if (S.screen === "songs") { S.screen = "quiz"; S.q = Q.length - 1; }
+  else if (S.screen === "photos") S.screen = "songs";
+  else if (S.screen === "reel") S.screen = "photos";
+  render();
+};
+render();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>
